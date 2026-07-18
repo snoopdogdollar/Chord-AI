@@ -1,0 +1,9 @@
+.git
+.agents
+data
+backend/data
+frontend/node_modules
+frontend/.next
+**/__pycache__
+**/*.pyc
+.pytest_cache
