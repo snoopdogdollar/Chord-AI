@@ -14,13 +14,23 @@ def extract_chroma_features(audio_path: Path, settings: Settings) -> FeatureSet:
 
     hop_length = 2048
     y, sample_rate = librosa.load(str(audio_path), sr=settings.internal_sample_rate, mono=True)
+
+    harmonic, _ = librosa.effects.hpss(y)
+    analysis_signal = harmonic
+    if np.max(np.abs(analysis_signal)) <= 0.001:
+        analysis_signal = y
+
     duration = float(librosa.get_duration(y=y, sr=sample_rate))
     if duration <= 0.05:
         raise ProcessingFailedError("Audio is empty or too short to analyze")
     if duration > settings.max_audio_duration_seconds:
         raise ProcessingFailedError("Audio duration exceeds the MVP limit")
 
-    chroma = librosa.feature.chroma_cqt(y=y, sr=sample_rate, hop_length=hop_length)
+    chroma = librosa.feature.chroma_cqt(
+    y=analysis_signal,
+    sr=sample_rate,
+    hop_length=hop_length
+    )
     chroma = np.nan_to_num(chroma, nan=0.0, posinf=0.0, neginf=0.0)
     timestamps = librosa.frames_to_time(range(chroma.shape[1]), sr=sample_rate, hop_length=hop_length)
 
