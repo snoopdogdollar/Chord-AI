@@ -66,31 +66,74 @@ def _append_event(
 
 
 def _merge_short_events(events: list[ChordEvent], minimum_duration: float) -> list[ChordEvent]:
+    if not events:
+        return []
+
+    result: list[ChordEvent] = []
+    index = 0
+
+    while index < len(events):
+        event = events[index]
+        duration = event.end - event.start
+
+        if result and event.chord == result[-1].chord:
+            previous = result.pop()
+            result.append(_join_events(previous, event, previous.chord))
+            index += 1
+            continue
+
+        # Keep short events if the detector is confident enough.
+        if duration < minimum_duration and event.confidence >= 0.72:
+            result.append(event)
+            index += 1
+            continue
+
+        if duration < minimum_duration:
+            previous = result[-1] if result else None
+            next_event = events[index + 1] if index + 1 < len(events) else None
+
+            if previous and next_event:
+                if next_event.confidence > previous.confidence:
+                    events[index + 1] = _join_events(event, next_event, next_event.chord)
+                else:
+                    result[-1] = _join_events(previous, event, previous.chord)
+                index += 1
+                continue
+
+            if previous:
+                result[-1] = _join_events(previous, event, previous.chord)
+                index += 1
+                continue
+
+            if next_event:
+                events[index + 1] = _join_events(event, next_event, next_event.chord)
+                index += 1
+                continue
+
+        result.append(event)
+        index += 1
+
+    return _merge_adjacent_duplicates(result)
+
+def _join_events(left: ChordEvent, right: ChordEvent, chord: str) -> ChordEvent:
+    return ChordEvent(
+        start=min(left.start, right.start),
+        end=max(left.end, right.end),
+        chord=chord,
+        confidence=(left.confidence + right.confidence) / 2,
+    )
+
+
+def _merge_adjacent_duplicates(events: list[ChordEvent]) -> list[ChordEvent]:
     merged: list[ChordEvent] = []
+
     for event in events:
-        if merged and event.chord == merged[-1].chord:
+        if merged and merged[-1].chord == event.chord:
             previous = merged.pop()
-            merged.append(
-                ChordEvent(
-                    start=previous.start,
-                    end=event.end,
-                    chord=event.chord,
-                    confidence=(previous.confidence + event.confidence) / 2,
-                )
-            )
-            continue
-        if event.end - event.start < minimum_duration and merged:
-            previous = merged.pop()
-            merged.append(
-                ChordEvent(
-                    start=previous.start,
-                    end=event.end,
-                    chord=previous.chord,
-                    confidence=min(previous.confidence, event.confidence),
-                )
-            )
-            continue
-        merged.append(event)
+            merged.append(_join_events(previous, event, event.chord))
+        else:
+            merged.append(event)
+
     return merged
 
 
