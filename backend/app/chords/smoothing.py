@@ -24,7 +24,7 @@ def smooth_predictions(
     if not labels or not timestamps:
         return []
 
-    half_window = max(1, window_size // 2)
+    half_window = max(0, window_size // 2)
     smoothed: list[str] = []
     for index in range(len(labels)):
         start = max(0, index - half_window)

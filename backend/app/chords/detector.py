@@ -27,7 +27,7 @@ class ChordDetector:
             timestamps,
             features.duration,
             beat_map,
-            window_size=3,
+            window_size=1,
             minimum_duration=0.8,
         )
 

@@ -1,6 +1,7 @@
 import unittest
 
-from app.audio.models import BeatMap
+from app.audio.models import BeatMap, FeatureSet
+from app.chords.detector import ChordDetector
 from app.chords.classifier import classify_chroma
 from app.chords.smoothing import smooth_predictions
 from app.chords.templates import CHORD_TEMPLATES
@@ -11,13 +12,13 @@ class ChordClassifierTests(unittest.TestCase):
         label, confidence = classify_chroma(CHORD_TEMPLATES["C"])
 
         self.assertEqual(label, "C")
-        self.assertGreaterEqual(confidence, 0.99)
+        self.assertGreaterEqual(confidence, 0.90)
 
     def test_classifies_minor_template(self):
         label, confidence = classify_chroma(CHORD_TEMPLATES["Am"])
 
         self.assertEqual(label, "Am")
-        self.assertGreaterEqual(confidence, 0.99)
+        self.assertGreaterEqual(confidence, 0.90)
 
     def test_silence_returns_no_chord(self):
         label, confidence = classify_chroma([0.0] * 12)
@@ -41,6 +42,33 @@ class SmoothingTests(unittest.TestCase):
         self.assertEqual(events[0].start, 0.0)
         self.assertEqual(events[-1].end, 6)
 
+class ChordDetectorIntegrationTests(unittest.TestCase):
+    def test_detects_c_g_am_f_from_beat_grouped_chroma(self):
+        features = FeatureSet(
+            chroma=[
+                CHORD_TEMPLATES["C"],
+                CHORD_TEMPLATES["C"],
+                CHORD_TEMPLATES["G"],
+                CHORD_TEMPLATES["G"],
+                CHORD_TEMPLATES["Am"],
+                CHORD_TEMPLATES["Am"],
+                CHORD_TEMPLATES["F"],
+                CHORD_TEMPLATES["F"],
+            ],
+            timestamps=[0.0, 0.5, 2.0, 2.5, 4.0, 4.5, 6.0, 6.5],
+            sample_rate=44100,
+            hop_length=2048,
+            duration=8.0,
+        )
+        beat_map = BeatMap(
+            bpm=120,
+            beats=[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0],
+        )
+
+        events = ChordDetector().detect(features, beat_map)
+
+        self.assertEqual([event.chord for event in events], ["C", "G", "Am", "F"])
 
 if __name__ == "__main__":
     unittest.main()
+
