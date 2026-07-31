@@ -47,6 +47,8 @@ class Song(Base):
     source_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     original_path: Mapped[str | None] = mapped_column(Text, nullable=True)
     processed_path: Mapped[str | None] = mapped_column(Text, nullable=True)
+    analysis_start_seconds: Mapped[float | None] = mapped_column(Float, nullable=True)
+    analysis_end_seconds: Mapped[float | None] = mapped_column(Float, nullable=True)
     duration: Mapped[float | None] = mapped_column(Float, nullable=True)
     bpm: Mapped[float | None] = mapped_column(Float, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

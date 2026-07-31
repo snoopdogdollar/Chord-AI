@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, File, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, UploadFile
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db, get_settings
@@ -27,10 +27,16 @@ def enqueue_processing(background_tasks: BackgroundTasks, job_id: str, settings:
 async def upload_audio(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
+    analysis_start_seconds: float | None = Form(None),
+    analysis_end_seconds: float | None = Form(None),
     db: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),
 ):
-    song_id, job_id = await SongService(db, settings).create_from_upload(file)
+    song_id, job_id = await SongService(db, settings).create_from_upload(
+        file,
+        analysis_start_seconds=analysis_start_seconds,
+        analysis_end_seconds=analysis_end_seconds,
+    )
     enqueue_processing(background_tasks, job_id, settings)
     return success_response({"song_id": song_id, "job_id": job_id, "status": "queued"})
 

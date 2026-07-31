@@ -22,6 +22,11 @@ class InvalidYouTubeUrlError(ChordAIError):
     status_code = 400
 
 
+class InvalidAnalysisRangeError(ChordAIError):
+    code = "INVALID_ANALYSIS_RANGE"
+    status_code = 400
+
+
 class YouTubeExtractionError(ChordAIError):
     code = "YOUTUBE_EXTRACTION_FAILED"
     status_code = 422

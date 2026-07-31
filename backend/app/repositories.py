@@ -14,8 +14,24 @@ class SongRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, *, title: str, source_type: str, source_url: str | None, original_path: str | None) -> Song:
-        song = Song(title=title, source_type=source_type, source_url=source_url, original_path=original_path)
+    def create(
+        self,
+        *,
+        title: str,
+        source_type: str,
+        source_url: str | None,
+        original_path: str | None,
+        analysis_start_seconds: float | None = None,
+        analysis_end_seconds: float | None = None,
+    ) -> Song:
+        song = Song(
+            title=title,
+            source_type=source_type,
+            source_url=source_url,
+            original_path=original_path,
+            analysis_start_seconds=analysis_start_seconds,
+            analysis_end_seconds=analysis_end_seconds,
+        )
         self.db.add(song)
         self.db.commit()
         self.db.refresh(song)
