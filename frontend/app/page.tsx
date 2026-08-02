@@ -1,10 +1,14 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { WaveformRangePicker } from "@/components/WaveformRangePicker";
 import { useChordAiWorkflow } from "@/features/useChordAiWorkflow";
+import type { AnalysisRange } from "@/services/api";
 
 export default function Home() {
   const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [analysisRange, setAnalysisRange] = useState<AnalysisRange | null>(null);
   const { busy, error, exportSheet, job, refreshJob, sheet, submitFile, submitUrl } = useChordAiWorkflow();
   const sheetText = sheet?.sections.flatMap((section) => section.content).join("\n") ?? "";
 
@@ -18,7 +22,14 @@ export default function Home() {
   function onFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file) {
-      void submitFile(file);
+      setSelectedFile(file);
+      setAnalysisRange(null);
+    }
+  }
+
+  function onFileSubmit() {
+    if (selectedFile && analysisRange) {
+      void submitFile(selectedFile, analysisRange);
     }
   }
 
@@ -59,6 +70,18 @@ export default function Home() {
                 disabled={busy}
                 onChange={onFileChange}
               />
+              {selectedFile ? <p className="mt-2 truncate text-xs text-slate-600">{selectedFile.name}</p> : null}
+              {selectedFile ? (
+                <WaveformRangePicker file={selectedFile} disabled={busy} onRangeChange={setAnalysisRange} />
+              ) : null}
+              <button
+                className="mt-3 w-full rounded bg-accent px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                type="button"
+                disabled={busy || !selectedFile || !analysisRange}
+                onClick={onFileSubmit}
+              >
+                Analyze
+              </button>
             </div>
 
             <form className="rounded border border-staff bg-white p-4" onSubmit={onYouTubeSubmit}>

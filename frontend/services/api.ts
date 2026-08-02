@@ -8,6 +8,11 @@ export type SubmitResponse = {
   status: string;
 };
 
+export type AnalysisRange = {
+  start: number;
+  end: number;
+};
+
 export type JobStatus = {
   job_id: string;
   song_id: string;
@@ -38,9 +43,18 @@ async function unwrap<T>(response: Response): Promise<T> {
   return body.data;
 }
 
-export async function uploadAudio(file: File): Promise<SubmitResponse> {
+export async function uploadAudio(
+  file: File,
+  range?: AnalysisRange
+): Promise<SubmitResponse> {
   const body = new FormData();
   body.append("file", file);
+
+  if (range) {
+    body.append("analysis_start_seconds", String(range.start));
+    body.append("analysis_end_seconds", String(range.end));
+  }
+
   const response = await fetch(`${API_BASE}/songs/upload`, { method: "POST", body });
   return unwrap<SubmitResponse>(response);
 }

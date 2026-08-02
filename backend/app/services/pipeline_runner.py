@@ -48,7 +48,13 @@ class PipelineRunner:
 
             self.jobs.mark_processing(job, stage=ProcessingStage.audio_extraction.value, progress=10)
             work_dir = self.settings.processed_dir / song.id
-            extracted_path = convert_to_wav(source_path, work_dir / "input.wav", self.settings)
+            extracted_path = convert_to_wav(
+                source_path,
+                work_dir / "input.wav",
+                self.settings,
+                analysis_start_seconds=song.analysis_start_seconds,
+                analysis_end_seconds=song.analysis_end_seconds,
+            )
 
             self.jobs.mark_processing(job, stage=ProcessingStage.normalization.value, progress=25)
             processed_path = normalize_audio(extracted_path, work_dir / "normalized.wav", self.settings)

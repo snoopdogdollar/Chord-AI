@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import {
   absoluteDownloadUrl,
+  AnalysisRange,
   createExport,
   getJob,
   getSheet,
@@ -17,7 +18,7 @@ type WorkflowState = {
   sheet: SheetResponse | null;
   error: string | null;
   busy: boolean;
-  submitFile: (file: File) => Promise<void>;
+  submitFile: (file: File, range?: AnalysisRange) => Promise<void>;
   submitUrl: (url: string) => Promise<void>;
   refreshJob: () => Promise<void>;
   exportSheet: (format: "txt" | "pdf") => Promise<void>;
@@ -28,10 +29,10 @@ export const useChordAiWorkflow = create<WorkflowState>((set, get) => ({
   sheet: null,
   error: null,
   busy: false,
-  async submitFile(file) {
+  async submitFile(file, range) {
     set({ busy: true, error: null, sheet: null });
     try {
-      const submitted = await uploadAudio(file);
+      const submitted = await uploadAudio(file, range);
       set({
         job: {
           job_id: submitted.job_id,
