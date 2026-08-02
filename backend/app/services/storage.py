@@ -33,7 +33,7 @@ async def store_upload(upload: UploadFile, settings: Settings) -> Path:
     validate_extension(upload.filename or "", settings)
     validate_mime_type(upload.content_type, settings)
     filename = f"{uuid4().hex}_{safe_filename(upload.filename or 'upload')}"
-    target_path = settings.uploads_dir / filename
+    target_path = (settings.uploads_dir / filename).resolve()
     target_path.parent.mkdir(parents=True, exist_ok=True)
 
     total = 0

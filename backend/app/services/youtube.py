@@ -32,11 +32,14 @@ def download_youtube_audio(url: str, settings: Settings) -> Path:
         url,
     ]
     try:
-        subprocess.run(command, check=True, capture_output=True, text=True)
+        subprocess.run(command, check=True, capture_output=True)
     except FileNotFoundError as exc:
         raise YouTubeExtractionError("yt-dlp is required for YouTube extraction") from exc
     except subprocess.CalledProcessError as exc:
-        raise YouTubeExtractionError(f"Could not extract audio: {exc.stderr[-300:]}") from exc
+        stderr = (exc.stderr or b"").decode("utf-8", errors="replace")
+        stdout = (exc.stdout or b"").decode("utf-8", errors="replace")
+        detail = (stderr or stdout or "no output")[-300:].strip()
+        raise YouTubeExtractionError(f"Could not extract audio: {detail}") from exc
 
     candidates = sorted(settings.uploads_dir.glob(f"{output_template.stem}.*"))
     if not candidates:

@@ -23,9 +23,12 @@ def normalize_audio(source_path: Path, target_path: Path, settings: Settings) ->
         str(target_path),
     ]
     try:
-        subprocess.run(command, check=True, capture_output=True, text=True)
+        subprocess.run(command, check=True, capture_output=True)
     except FileNotFoundError as exc:
         raise ProcessingFailedError("ffmpeg is required for audio normalization") from exc
     except subprocess.CalledProcessError as exc:
-        raise ProcessingFailedError(f"Audio normalization failed: {exc.stderr[-300:]}") from exc
+        stderr = (exc.stderr or b"").decode("utf-8", errors="replace")
+        stdout = (exc.stdout or b"").decode("utf-8", errors="replace")
+        detail = (stderr or stdout or "no output")[-500:].strip()
+        raise ProcessingFailedError(f"Audio normalization failed: {detail}") from exc
     return target_path
