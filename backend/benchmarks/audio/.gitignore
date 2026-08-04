@@ -1,0 +1,5 @@
+# Benchmark audio files (not tracked in git)
+*.mp3
+*.wav
+*.flac
+*.m4a

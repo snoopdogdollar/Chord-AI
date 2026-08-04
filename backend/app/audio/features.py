@@ -27,11 +27,12 @@ def extract_chroma_features(audio_path: Path, settings: Settings) -> FeatureSet:
         raise ProcessingFailedError("Audio duration exceeds the MVP limit")
 
     chroma = librosa.feature.chroma_cqt(
-    y=analysis_signal,
-    sr=sample_rate,
-    hop_length=hop_length
+        y=analysis_signal,
+        sr=sample_rate,
+        hop_length=hop_length,
     )
     chroma = np.nan_to_num(chroma, nan=0.0, posinf=0.0, neginf=0.0)
+    chroma = np.log1p(1.0 * chroma)
     timestamps = librosa.frames_to_time(range(chroma.shape[1]), sr=sample_rate, hop_length=hop_length)
 
     return FeatureSet(
