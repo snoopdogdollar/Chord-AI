@@ -1,5 +1,6 @@
 from app.audio.models import BeatMap, FeatureSet
 from app.chords.classifier import classify_chroma
+from app.chords.key_estimation import estimate_key, get_diatonic_chords
 from app.chords.models import ChordEvent
 from app.chords.smoothing import smooth_predictions
 
@@ -8,12 +9,17 @@ class ChordDetector:
     def detect(self, features: FeatureSet, beat_map: BeatMap) -> list[ChordEvent]:
         segments = build_beat_segments(features, beat_map)
 
+        # Estimate global song key to guide classification priors
+        global_chroma = mean_vector(features.chroma) if features.chroma else [0.0] * 12
+        key_root, key_mode = estimate_key(global_chroma)
+        diatonic_chords = get_diatonic_chords(key_root, key_mode)
+
         labels: list[str] = []
         confidences: list[float] = []
         timestamps: list[float] = []
 
         for segment in segments:
-            label, confidence = classify_chroma(segment["chroma"])
+            label, confidence = classify_chroma(segment["chroma"], diatonic_chords=diatonic_chords)
             labels.append(label)
             confidences.append(confidence)
             timestamps.append(segment["start"])
@@ -78,6 +84,14 @@ def build_fixed_time_boundaries(duration: float, seconds: float) -> list[float]:
 
     boundaries.append(duration)
     return boundaries
+
+
+def mean_vector(vectors: list[list[float]]) -> list[float]:
+    if not vectors:
+        return [0.0] * 12
+
+    columns = zip(*vectors)
+    return [sum(column) / len(vectors) for column in columns]
 
 
 def median_vector(vectors: list[list[float]]) -> list[float]:

@@ -24,7 +24,10 @@ def cosine_similarity(left: list[float], right: list[float]) -> float:
     return numerator / (left_norm * right_norm)
 
 
-def classify_chroma(chroma_vector: list[float]) -> tuple[str, float]:
+def classify_chroma(
+    chroma_vector: list[float],
+    diatonic_chords: set[str] | None = None,
+) -> tuple[str, float]:
     if len(chroma_vector) != 12:
         return "N", 0.0
 
@@ -37,6 +40,8 @@ def classify_chroma(chroma_vector: list[float]) -> tuple[str, float]:
 
     for label, template in CHORD_TEMPLATES.items():
         score = cosine_similarity(chroma, template)
+        if diatonic_chords and label in diatonic_chords:
+            score += 0.06
         scored.append((label, score))
 
     scored.sort(key=lambda item: item[1], reverse=True)

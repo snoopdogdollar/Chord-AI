@@ -336,9 +336,9 @@ def format_evaluation_report(result: EvaluationResult, title: str = "") -> str:
         sorted_confusion = sorted(result.confusion.items(), key=lambda item: item[1], reverse=True)
         lines.append(f"  {'Predicted':<10} {'Actual':<10} {'Duration(s)':>12}")
         lines.append(f"  {'-' * 32}")
-        for (pred, ref), dur in sorted_confusion[:20]:
-            marker = " ✓" if pred == ref else ""
-            lines.append(f"  {pred:<10} {ref:<10} {dur:>12.2f}{marker}")
+        for (pred, actual), dur in sorted_confusion[:20]:
+            match_flag = " [OK]" if pred == actual else ""
+            lines.append(f"  {pred:<10} {actual:<10} {dur:>12.2f}s{match_flag}")
         lines.append("")
 
     return "\n".join(lines)

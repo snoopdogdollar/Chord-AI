@@ -90,11 +90,24 @@ def run_single_benchmark(
         print(f"         {event.start:>7.2f}s - {event.end:>7.2f}s  {event.chord:<6}  conf={event.confidence:.3f}")
     print()
 
-    # Show ground truth.
-    print(f"         Ground truth: {len(annotations)} annotations:")
-    for ann in annotations:
-        print(f"         {ann.start:>7.2f}s - {ann.end:>7.2f}s  {ann.chord}")
-    print()
+    # Save predictions to file.
+    predictions_dir = BENCHMARKS_DIR / "predictions"
+    predictions_dir.mkdir(exist_ok=True)
+    
+    json_out = predictions_dir / f"{annotation_path.stem}_predicted.json"
+    pred_data = [
+        {"start": round(e.start, 2), "end": round(e.end, 2), "chord": e.chord, "confidence": round(e.confidence, 3)}
+        for e in predicted
+    ]
+    json_out.write_text(json.dumps(pred_data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    txt_out = predictions_dir / f"{annotation_path.stem}_predicted.txt"
+    txt_lines = [f"{e.start:>7.2f}s - {e.end:>7.2f}s  {e.chord:<6}  conf={e.confidence:.3f}" for e in predicted]
+    txt_out.write_text("\n".join(txt_lines), encoding="utf-8")
+
+    print(f"  [Saved] Predictions exported to:")
+    print(f"          - JSON: {json_out}")
+    print(f"          - TXT:  {txt_out}\n")
 
     # Evaluate.
     print("  [4/4] Computing accuracy metrics...")

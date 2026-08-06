@@ -16,14 +16,15 @@ All experiments follow the structured framework: **Hypothesis → Implementation
 | **005** | Confusion Matrix Analysis | Error Mode Diagnosis | Identified 2-note pitch overlap failure modes | [005_confusion_matrix.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/005_confusion_matrix.md) |
 | **006** | Ablation Study Summary | Component Contribution | Visualized incremental CSR gains per step | [006_ablation_summary.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/006_ablation_summary.md) |
 | **007** | Confidence Calibration | Reliability Verification | Monotonic Accuracy vs Confidence correlation | [007_confidence_calibration.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/007_confidence_calibration.md) |
+| **008** | Global Key Estimation | Diatonic Prior Weighting | 100% key accuracy, CSR +2.2pp avg gain | [008_key_estimation.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/008_key_estimation.md) |
 
 ---
 
 ## Cumulative Benchmark Progress
 
-| Benchmark Track | Baseline CSR | Final Optimized CSR | Total CSR Gain | Baseline N-rate | Final N-rate |
+| Benchmark Track | Baseline CSR | Post-Optimization CSR | Total CSR Gain | Baseline N-rate | Final N-rate |
 |---|:---:|:---:|:---:|:---:|:---:|
-| **Rock Backing Track** | 29.6% | **41.7%** | **+12.1pp** | 25.4% | **0.0%** |
-| **Chạy Ngay Đi** | 6.1% | **12.3%** | **+6.2pp** | 27.8% | **0.0%** |
-| **Nếu Như Ta Chẳng Còn** | 13.4% | **11.2%** | -2.2pp | 19.3% | **0.0%** |
-| **Average Across All Tracks** | **16.4%** | **21.7%** | **+5.3pp** | **24.2%** | **0.0%** |
+| **Rock Backing Track** | 29.6% | **44.8%** | **+15.2pp** 🚀 | 25.4% | **0.0%** |
+| **Chạy Ngay Đi** | 6.1% | **14.2%** | **+8.1pp** 📈 | 27.8% | **0.0%** |
+| **Nếu Như Ta Chẳng Còn** | 13.4% | **12.6%** | -0.8pp | 19.3% | **0.0%** |
+| **Average Across All Tracks** | **16.4%** | **23.9%** | **+7.5pp** | **24.2%** | **0.0%** |
