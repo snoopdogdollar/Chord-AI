@@ -57,7 +57,7 @@ def build_beat_segments(features: FeatureSet, beat_map: BeatMap) -> list[dict]:
             {
                 "start": start,
                 "end": end,
-                "chroma": median_vector(chroma_frames),
+                "chroma": mean_vector(chroma_frames),
             }
         )
 

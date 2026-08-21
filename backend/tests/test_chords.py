@@ -44,25 +44,33 @@ class SmoothingTests(unittest.TestCase):
 
 class ChordDetectorIntegrationTests(unittest.TestCase):
     def test_detects_c_g_am_f_from_beat_grouped_chroma(self):
+        # 4 chords × 4 beats per bar = 16 beats total
+        # Each bar gets 4 chroma frames matching the chord template
         features = FeatureSet(
             chroma=[
-                CHORD_TEMPLATES["C"],
-                CHORD_TEMPLATES["C"],
-                CHORD_TEMPLATES["G"],
-                CHORD_TEMPLATES["G"],
-                CHORD_TEMPLATES["Am"],
-                CHORD_TEMPLATES["Am"],
-                CHORD_TEMPLATES["F"],
-                CHORD_TEMPLATES["F"],
+                CHORD_TEMPLATES["C"], CHORD_TEMPLATES["C"],
+                CHORD_TEMPLATES["C"], CHORD_TEMPLATES["C"],
+                CHORD_TEMPLATES["G"], CHORD_TEMPLATES["G"],
+                CHORD_TEMPLATES["G"], CHORD_TEMPLATES["G"],
+                CHORD_TEMPLATES["Am"], CHORD_TEMPLATES["Am"],
+                CHORD_TEMPLATES["Am"], CHORD_TEMPLATES["Am"],
+                CHORD_TEMPLATES["F"], CHORD_TEMPLATES["F"],
+                CHORD_TEMPLATES["F"], CHORD_TEMPLATES["F"],
             ],
-            timestamps=[0.0, 0.5, 2.0, 2.5, 4.0, 4.5, 6.0, 6.5],
+            timestamps=[
+                0.0, 0.5, 1.0, 1.5,
+                2.0, 2.5, 3.0, 3.5,
+                4.0, 4.5, 5.0, 5.5,
+                6.0, 6.5, 7.0, 7.5,
+            ],
             sample_rate=44100,
             hop_length=2048,
             duration=8.0,
         )
         beat_map = BeatMap(
             bpm=120,
-            beats=[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0],
+            beats=[0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5,
+                   4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5],
         )
 
         events = ChordDetector().detect(features, beat_map)

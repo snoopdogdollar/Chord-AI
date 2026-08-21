@@ -1,213 +1,103 @@
-"""Benchmark runner for chord detection accuracy.
+"""Run benchmark on all 3 songs with the current detector and fixed Ground Truth.
 
-Usage:
-    python -m benchmarks.run_benchmark
-    python -m benchmarks.run_benchmark --annotation benchmarks/annotations/chay_ngay_di.json --audio benchmarks/audio/chay_ngay_di.mp3
-
-This script:
-1. Loads a ground truth annotation JSON file.
-2. Runs the full audio pipeline (extraction → normalization → features → beats → detection).
-3. Compares predictions against ground truth using mir_eval.
-4. Prints a detailed accuracy report.
-
-Requirements:
-- Audio file must exist in benchmarks/audio/.
-- Annotation file must be filled in (not placeholder).
-- mir_eval must be installed: pip install mir_eval
+Outputs CSR scores and confusion matrices for comparison.
 """
-
-from __future__ import annotations
-
-import argparse
-import json
 import sys
 from pathlib import Path
 
-# Ensure the backend package is importable.
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import soundfile as sf
 
-from app.audio.pipeline import AudioPipeline
+from app.audio.beats import detect_beats
+from app.audio.features import extract_chroma_features
 from app.chords.detector import ChordDetector
-from app.chords.evaluation import evaluate, format_evaluation_report, load_annotations
+from app.chords.evaluation import evaluate, load_annotations, format_evaluation_report
 from app.core.config import Settings
 
 
-BENCHMARKS_DIR = Path(__file__).resolve().parent
-ANNOTATIONS_DIR = BENCHMARKS_DIR / "annotations"
-AUDIO_DIR = BENCHMARKS_DIR / "audio"
+def run_benchmark(song_name, ann_path, audio_dir, settings):
+    """Run detection + evaluation for a single song."""
+    wav_path = audio_dir / "normalized.wav"
 
+    if not wav_path.exists():
+        print(f"  SKIP: {wav_path} not found")
+        return None
 
-def find_audio_file(stem: str) -> Path | None:
-    """Find an audio file matching the annotation stem."""
-    for ext in (".mp3", ".wav", ".flac", ".m4a"):
-        candidate = AUDIO_DIR / f"{stem}{ext}"
-        if candidate.exists():
-            return candidate
-    return None
+    ann_path = Path(ann_path)
+    if not ann_path.exists():
+        print(f"  SKIP: {ann_path} not found")
+        return None
 
+    # Get audio duration
+    y, sr = sf.read(str(wav_path))
+    duration = float(len(y) / sr)
 
-def run_single_benchmark(
-    annotation_path: Path,
-    audio_path: Path,
-    settings: Settings,
-    *,
-    analysis_start: float | None = None,
-    analysis_end: float | None = None,
-) -> None:
-    """Run a single benchmark: pipeline → detect → evaluate → report."""
-    print(f"\n{'=' * 60}")
-    print(f"  Benchmark: {annotation_path.stem}")
-    print(f"  Audio:     {audio_path}")
-    print(f"{'=' * 60}\n")
+    # Run the full detection pipeline
+    features = extract_chroma_features(wav_path, settings)
+    beats = detect_beats(wav_path, settings)
+    events = ChordDetector().detect(features, beats)
 
-    # Load ground truth.
-    annotations = load_annotations(annotation_path)
-    if not annotations or (len(annotations) == 1 and annotations[0].chord == "N"):
-        print("  ⚠ Annotation file appears to be a placeholder.")
-        print("  ⚠ Please fill in chord data from Hợp Âm Chuẩn before running.")
-        print()
-        return
+    # Load ground truth
+    annotations = load_annotations(ann_path)
 
-    # Run pipeline.
-    print("  [1/4] Running audio pipeline...")
-    pipeline = AudioPipeline(settings)
-    song_id = f"benchmark_{annotation_path.stem}"
-    _, features, beat_map = pipeline.run(
-        audio_path,
-        song_id,
-        analysis_start_seconds=analysis_start,
-        analysis_end_seconds=analysis_end,
-    )
+    # Evaluate
+    result = evaluate(events, annotations, duration)
 
-    # Detect chords.
-    print("  [2/4] Running chord detector...")
-    detector = ChordDetector()
-    predicted = detector.detect(features, beat_map)
-
-    # Show predictions.
-    print(f"  [3/4] Predicted {len(predicted)} chord events:")
-    for event in predicted:
-        print(f"         {event.start:>7.2f}s - {event.end:>7.2f}s  {event.chord:<6}  conf={event.confidence:.3f}")
-    print()
-
-    # Save predictions to file.
-    predictions_dir = BENCHMARKS_DIR / "predictions"
-    predictions_dir.mkdir(exist_ok=True)
-    
-    json_out = predictions_dir / f"{annotation_path.stem}_predicted.json"
-    pred_data = [
-        {"start": round(e.start, 2), "end": round(e.end, 2), "chord": e.chord, "confidence": round(e.confidence, 3)}
-        for e in predicted
-    ]
-    json_out.write_text(json.dumps(pred_data, indent=2, ensure_ascii=False), encoding="utf-8")
-
-    txt_out = predictions_dir / f"{annotation_path.stem}_predicted.txt"
-    txt_lines = [f"{e.start:>7.2f}s - {e.end:>7.2f}s  {e.chord:<6}  conf={e.confidence:.3f}" for e in predicted]
-    txt_out.write_text("\n".join(txt_lines), encoding="utf-8")
-
-    print(f"  [Saved] Predictions exported to:")
-    print(f"          - JSON: {json_out}")
-    print(f"          - TXT:  {txt_out}\n")
-
-    # Evaluate.
-    print("  [4/4] Computing accuracy metrics...")
-    duration = features.duration
-    result = evaluate(predicted, annotations, duration)
-
-    # Print report.
-    report = format_evaluation_report(result, title=annotation_path.stem)
+    # Print report
+    report = format_evaluation_report(result, title=song_name)
     print(report)
 
-    # Print confidence distribution.
-    if predicted:
-        confidences = [e.confidence for e in predicted]
-        print("Confidence Distribution")
-        print(f"  min    : {min(confidences):.3f}")
-        print(f"  max    : {max(confidences):.3f}")
-        print(f"  mean   : {sum(confidences) / len(confidences):.3f}")
-        below_70 = sum(1 for c in confidences if c < 0.70)
-        below_65 = sum(1 for c in confidences if c < 0.65)
-        print(f"  < 0.70 : {below_70}/{len(confidences)}")
-        print(f"  < 0.65 : {below_65}/{len(confidences)}")
-        print()
+    return result
 
 
-def run_all_benchmarks(settings: Settings) -> None:
-    """Discover and run all benchmarks with matching audio files."""
-    annotation_files = sorted(ANNOTATIONS_DIR.glob("*.json"))
-
-    if not annotation_files:
-        print("No annotation files found in", ANNOTATIONS_DIR)
-        return
-
-    found = 0
-    for annotation_path in annotation_files:
-        audio_path = find_audio_file(annotation_path.stem)
-        if audio_path is None:
-            print(f"  ⚠ Skipping {annotation_path.stem}: no audio file found in {AUDIO_DIR}")
-            continue
-        found += 1
-        run_single_benchmark(annotation_path, audio_path, settings)
-
-    if found == 0:
-        print()
-        print("No benchmarks could run. To set up benchmarks:")
-        print(f"  1. Place audio files in: {AUDIO_DIR}")
-        print(f"     (named to match annotation files, e.g., chay_ngay_di.mp3)")
-        print(f"  2. Fill in chord annotations in: {ANNOTATIONS_DIR}")
-        print(f"     (replace placeholder data with real chords from Hợp Âm Chuẩn)")
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Chord detection benchmark runner")
-    parser.add_argument(
-        "--annotation",
-        type=Path,
-        help="Path to a specific annotation JSON file. If omitted, runs all benchmarks.",
-    )
-    parser.add_argument(
-        "--audio",
-        type=Path,
-        help="Path to the audio file. Required if --annotation is specified.",
-    )
-    parser.add_argument(
-        "--start",
-        type=float,
-        default=None,
-        help="Analysis start time in seconds.",
-    )
-    parser.add_argument(
-        "--end",
-        type=float,
-        default=None,
-        help="Analysis end time in seconds.",
-    )
-    args = parser.parse_args()
-
+def main():
     settings = Settings()
+    proc_dir = Path("data/processed")
 
-    if args.annotation:
-        if not args.annotation.exists():
-            print(f"Error: Annotation file not found: {args.annotation}")
-            sys.exit(1)
+    songs = [
+        {
+            "name": "Rock Backing Track (C Major)",
+            "ann": "benchmarks/annotations/rock_backing_c_major.json",
+            "audio_dir": proc_dir / "fast_rock_backing_c_major",
+        },
+        {
+            "name": "Chay Ngay Di (ONIONN Remix)",
+            "ann": "benchmarks/annotations/chay_ngay_di.json",
+            "audio_dir": proc_dir / "fast_chay_ngay_di",
+        },
+        {
+            "name": "Neu Nhu Ta Chang Con (MCK)",
+            "ann": "benchmarks/annotations/neu_nhu_ta_chang_con.json",
+            "audio_dir": proc_dir / "fast_neu_nhu_ta_chang_con",
+        },
+    ]
 
-        audio_path = args.audio
-        if audio_path is None:
-            audio_path = find_audio_file(args.annotation.stem)
-        if audio_path is None or not audio_path.exists():
-            print(f"Error: Audio file not found for {args.annotation.stem}")
-            print(f"  Place the audio file in {AUDIO_DIR} or specify --audio")
-            sys.exit(1)
+    print("=" * 70)
+    print("  BENCHMARK: POST-GROUND-TRUTH-FIX EVALUATION")
+    print("=" * 70)
 
-        run_single_benchmark(
-            args.annotation,
-            audio_path,
-            settings,
-            analysis_start=args.start,
-            analysis_end=args.end,
+    results = {}
+    for song in songs:
+        print(f"\n{'='*70}")
+        result = run_benchmark(
+            song["name"], song["ann"], song["audio_dir"], settings
         )
-    else:
-        run_all_benchmarks(settings)
+        if result:
+            results[song["name"]] = result
+        print("=" * 70)
+
+    # Summary table
+    print(f"\n{'='*70}")
+    print("  SUMMARY: CSR MajMin Results")
+    print(f"{'='*70}")
+    print(f"  {'Song':<35} {'CSR (MajMin)':>12} {'CSR (Root)':>12} {'N-rate':>8}")
+    print(f"  {'-'*67}")
+    for name, r in results.items():
+        print(f"  {name:<35} {r.csr_majmin*100:>11.1f}% {r.csr_root*100:>11.1f}% {r.n_rate*100:>7.1f}%")
+    print(f"  {'-'*67}")
+
+    if len(results) > 0:
+        avg_csr = sum(r.csr_majmin for r in results.values()) / len(results)
+        print(f"  {'AVERAGE':<35} {avg_csr*100:>11.1f}%")
 
 
 if __name__ == "__main__":

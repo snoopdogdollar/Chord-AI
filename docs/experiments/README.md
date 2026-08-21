@@ -21,6 +21,7 @@ All experiments follow the structured framework: **Hypothesis → Implementation
 | **010** | Chroma Feature Comparison | CQT vs STFT vs CENS | Verified CQT (68.3%) > CENS (64.8%) > STFT (6.3%) | [010_chroma_feature_comparison.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/010_chroma_feature_comparison.md) |
 | **011** | Root Emphasis Grid Search | Root vs Fifth Emphasis | Optimal $w_5=0.50$, Peak CSR 69.6% (+40.0pp) | [011_root_emphasis.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/011_root_emphasis.md) |
 | **012** | Distance Metrics Ablation | Cosine vs Pearson vs L2 vs L1 | Confirmed Cosine (69.6%) > L2 (64.0%) > Pearson (61.5%) | [012_distance_metrics_ablation.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/012_distance_metrics_ablation.md) |
+| **013** | Ground Truth Audit | Annotation Rigor Verification | Identified 7-9s phase shift in Pop ground truth draft files | [013_ground_truth_audit.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/013_ground_truth_audit.md) |
 
 ---
 

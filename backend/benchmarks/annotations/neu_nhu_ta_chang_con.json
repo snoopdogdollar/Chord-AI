@@ -1,576 +1,576 @@
 {
   "title": "Nếu Như Ta Chẳng Còn - MCK",
-  "source": "hopamchuan.com - Tone Dm",
-  "notes": "~92 BPM, 4/4 time. 114 bars. WARNING: VERY APPROXIMATE. Song has complex verse/chorus structure. Section boundaries and chord timings are estimated and MUST be verified by listening to the audio. This annotation should be treated as a rough draft.",
+  "source": "hopamchuan.com - Tone Dm | Beat-aligned by fix_ground_truth.py",
+  "notes": "Beat-aligned Ground Truth. Detected BPM: 92.3 (raw: 184.6). Timestamps snapped to librosa beat grid (downbeats). Original linear-extrapolated timestamps replaced. Avg start drift correction: 3411ms.",
   "annotations": [
     {
-      "start": 5.0,
-      "end": 7.6,
+      "start": 5.828,
+      "end": 8.406,
       "chord": "Gm"
     },
     {
-      "start": 7.6,
-      "end": 10.2,
+      "start": 8.406,
+      "end": 11.146,
       "chord": "A"
     },
     {
-      "start": 10.2,
-      "end": 12.8,
+      "start": 11.146,
+      "end": 13.746,
       "chord": "Dm"
     },
     {
-      "start": 12.8,
-      "end": 15.4,
+      "start": 13.746,
+      "end": 16.37,
       "chord": "A#"
     },
     {
-      "start": 15.4,
-      "end": 18.0,
+      "start": 16.37,
+      "end": 18.924,
       "chord": "Gm"
     },
     {
-      "start": 18.0,
-      "end": 20.6,
+      "start": 18.924,
+      "end": 21.502,
       "chord": "A"
     },
     {
-      "start": 20.6,
-      "end": 23.2,
+      "start": 21.502,
+      "end": 23.986,
       "chord": "Dm"
     },
     {
-      "start": 23.2,
-      "end": 25.8,
+      "start": 23.986,
+      "end": 26.517,
       "chord": "A#"
     },
     {
-      "start": 25.8,
-      "end": 28.4,
+      "start": 26.517,
+      "end": 29.071,
       "chord": "Gm"
     },
     {
-      "start": 28.4,
-      "end": 31.0,
+      "start": 29.071,
+      "end": 31.579,
       "chord": "A"
     },
     {
-      "start": 31.0,
-      "end": 33.6,
+      "start": 31.579,
+      "end": 34.087,
       "chord": "Dm"
     },
     {
-      "start": 33.6,
-      "end": 36.2,
+      "start": 34.087,
+      "end": 36.78,
       "chord": "A#"
     },
     {
-      "start": 36.2,
-      "end": 38.8,
+      "start": 36.78,
+      "end": 39.427,
       "chord": "Gm"
     },
     {
-      "start": 38.8,
-      "end": 41.4,
+      "start": 39.427,
+      "end": 41.819,
       "chord": "A"
     },
     {
-      "start": 41.4,
-      "end": 44.0,
+      "start": 41.819,
+      "end": 44.397,
       "chord": "Dm"
     },
     {
-      "start": 44.0,
-      "end": 46.6,
+      "start": 44.397,
+      "end": 46.928,
       "chord": "A#"
     },
     {
-      "start": 46.6,
-      "end": 49.2,
+      "start": 46.928,
+      "end": 49.505,
       "chord": "Gm"
     },
     {
-      "start": 49.2,
-      "end": 51.8,
+      "start": 49.505,
+      "end": 51.966,
       "chord": "A"
     },
     {
-      "start": 51.8,
-      "end": 54.4,
+      "start": 51.966,
+      "end": 54.59,
       "chord": "Dm"
     },
     {
-      "start": 54.4,
-      "end": 57.0,
+      "start": 54.59,
+      "end": 57.26,
       "chord": "A#"
     },
     {
-      "start": 57.0,
-      "end": 59.6,
+      "start": 57.26,
+      "end": 59.884,
       "chord": "Gm"
     },
     {
-      "start": 59.6,
-      "end": 62.2,
+      "start": 59.884,
+      "end": 62.624,
       "chord": "A"
     },
     {
-      "start": 62.2,
-      "end": 64.8,
+      "start": 62.624,
+      "end": 65.155,
       "chord": "Dm"
     },
     {
-      "start": 64.8,
-      "end": 67.4,
+      "start": 65.155,
+      "end": 67.825,
       "chord": "A#"
     },
     {
-      "start": 67.4,
-      "end": 70.0,
+      "start": 67.825,
+      "end": 70.403,
       "chord": "Gm"
     },
     {
-      "start": 70.0,
-      "end": 72.6,
+      "start": 70.403,
+      "end": 73.027,
       "chord": "A"
     },
     {
-      "start": 72.6,
-      "end": 75.2,
+      "start": 73.027,
+      "end": 75.581,
       "chord": "Dm"
     },
     {
-      "start": 75.2,
-      "end": 77.8,
+      "start": 75.581,
+      "end": 78.228,
       "chord": "A#"
     },
     {
-      "start": 80.0,
-      "end": 82.6,
+      "start": 78.228,
+      "end": 80.805,
       "chord": "Gm"
     },
     {
-      "start": 82.6,
-      "end": 85.2,
+      "start": 80.805,
+      "end": 83.429,
       "chord": "C"
     },
     {
-      "start": 85.2,
-      "end": 87.8,
+      "start": 83.429,
+      "end": 86.03,
       "chord": "F"
     },
     {
-      "start": 87.8,
-      "end": 90.4,
+      "start": 86.03,
+      "end": 88.677,
       "chord": "A#"
     },
     {
-      "start": 90.4,
-      "end": 93.0,
+      "start": 88.677,
+      "end": 91.278,
       "chord": "Gm"
     },
     {
-      "start": 93.0,
-      "end": 95.6,
+      "start": 91.278,
+      "end": 93.878,
       "chord": "A"
     },
     {
-      "start": 95.6,
-      "end": 98.2,
+      "start": 93.878,
+      "end": 96.479,
       "chord": "Dm"
     },
     {
-      "start": 98.2,
-      "end": 100.8,
+      "start": 96.479,
+      "end": 99.08,
       "chord": "Dm"
     },
     {
-      "start": 100.8,
-      "end": 103.4,
+      "start": 99.08,
+      "end": 101.703,
       "chord": "Gm"
     },
     {
-      "start": 103.4,
-      "end": 106.0,
+      "start": 101.703,
+      "end": 104.327,
       "chord": "C"
     },
     {
-      "start": 106.0,
-      "end": 108.6,
+      "start": 104.327,
+      "end": 106.928,
       "chord": "F"
     },
     {
-      "start": 108.6,
-      "end": 111.2,
+      "start": 106.928,
+      "end": 109.529,
       "chord": "A#"
     },
     {
-      "start": 111.2,
-      "end": 113.8,
+      "start": 109.529,
+      "end": 112.129,
       "chord": "Gm"
     },
     {
-      "start": 113.8,
-      "end": 116.4,
+      "start": 112.129,
+      "end": 114.707,
       "chord": "A"
     },
     {
-      "start": 116.4,
-      "end": 119.0,
+      "start": 114.707,
+      "end": 117.354,
       "chord": "Dm"
     },
     {
-      "start": 120.0,
-      "end": 122.6,
+      "start": 117.354,
+      "end": 119.954,
       "chord": "Gm"
     },
     {
-      "start": 122.6,
-      "end": 125.2,
+      "start": 119.954,
+      "end": 122.508,
       "chord": "A"
     },
     {
-      "start": 125.2,
-      "end": 127.8,
+      "start": 122.508,
+      "end": 125.132,
       "chord": "Dm"
     },
     {
-      "start": 127.8,
-      "end": 130.4,
+      "start": 125.132,
+      "end": 127.687,
       "chord": "A#"
     },
     {
-      "start": 130.4,
-      "end": 133.0,
+      "start": 127.687,
+      "end": 130.264,
       "chord": "Gm"
     },
     {
-      "start": 133.0,
-      "end": 135.6,
+      "start": 130.264,
+      "end": 132.981,
       "chord": "A"
     },
     {
-      "start": 135.6,
-      "end": 138.2,
+      "start": 132.981,
+      "end": 135.512,
       "chord": "Dm"
     },
     {
-      "start": 138.2,
-      "end": 140.8,
+      "start": 135.512,
+      "end": 138.136,
       "chord": "A#"
     },
     {
-      "start": 140.8,
-      "end": 143.4,
+      "start": 138.136,
+      "end": 140.666,
       "chord": "Gm"
     },
     {
-      "start": 143.4,
-      "end": 146.0,
+      "start": 140.666,
+      "end": 143.128,
       "chord": "A"
     },
     {
-      "start": 146.0,
-      "end": 148.6,
+      "start": 143.128,
+      "end": 145.752,
       "chord": "Dm"
     },
     {
-      "start": 148.6,
-      "end": 151.2,
+      "start": 145.752,
+      "end": 148.329,
       "chord": "A#"
     },
     {
-      "start": 151.2,
-      "end": 153.8,
+      "start": 148.329,
+      "end": 150.93,
       "chord": "Gm"
     },
     {
-      "start": 153.8,
-      "end": 156.4,
+      "start": 150.93,
+      "end": 153.507,
       "chord": "A"
     },
     {
-      "start": 156.4,
-      "end": 159.0,
+      "start": 153.507,
+      "end": 156.061,
       "chord": "Dm"
     },
     {
-      "start": 159.0,
-      "end": 161.6,
+      "start": 156.061,
+      "end": 158.755,
       "chord": "A#"
     },
     {
-      "start": 161.6,
-      "end": 164.2,
+      "start": 158.755,
+      "end": 161.054,
       "chord": "Gm"
     },
     {
-      "start": 164.2,
-      "end": 166.8,
+      "start": 161.054,
+      "end": 163.654,
       "chord": "A"
     },
     {
-      "start": 166.8,
-      "end": 169.4,
+      "start": 163.654,
+      "end": 166.278,
       "chord": "Dm"
     },
     {
-      "start": 169.4,
-      "end": 172.0,
+      "start": 166.278,
+      "end": 168.879,
       "chord": "A#"
     },
     {
-      "start": 172.0,
-      "end": 174.6,
+      "start": 168.879,
+      "end": 171.479,
       "chord": "Gm"
     },
     {
-      "start": 174.6,
-      "end": 177.2,
+      "start": 171.479,
+      "end": 174.08,
       "chord": "A"
     },
     {
-      "start": 177.2,
-      "end": 179.8,
+      "start": 174.08,
+      "end": 176.704,
       "chord": "Dm"
     },
     {
-      "start": 179.8,
-      "end": 182.4,
+      "start": 176.704,
+      "end": 179.304,
       "chord": "A#"
     },
     {
-      "start": 182.4,
-      "end": 185.0,
+      "start": 179.304,
+      "end": 181.928,
       "chord": "Gm"
     },
     {
-      "start": 185.0,
-      "end": 187.6,
+      "start": 181.928,
+      "end": 184.575,
       "chord": "A"
     },
     {
-      "start": 190.0,
-      "end": 192.6,
+      "start": 184.575,
+      "end": 187.176,
       "chord": "Gm"
     },
     {
-      "start": 192.6,
-      "end": 195.2,
+      "start": 187.176,
+      "end": 189.73,
       "chord": "C"
     },
     {
-      "start": 195.2,
-      "end": 197.8,
+      "start": 189.73,
+      "end": 192.377,
       "chord": "F"
     },
     {
-      "start": 197.8,
-      "end": 200.4,
+      "start": 192.377,
+      "end": 194.955,
       "chord": "A#"
     },
     {
-      "start": 200.4,
-      "end": 203.0,
+      "start": 194.955,
+      "end": 197.602,
       "chord": "Gm"
     },
     {
-      "start": 203.0,
-      "end": 205.6,
+      "start": 197.602,
+      "end": 200.156,
       "chord": "A"
     },
     {
-      "start": 205.6,
-      "end": 208.2,
+      "start": 200.156,
+      "end": 202.78,
       "chord": "Dm"
     },
     {
-      "start": 208.2,
-      "end": 210.8,
+      "start": 202.78,
+      "end": 205.38,
       "chord": "Dm"
     },
     {
-      "start": 210.8,
-      "end": 213.4,
+      "start": 205.38,
+      "end": 208.051,
       "chord": "Gm"
     },
     {
-      "start": 213.4,
-      "end": 216.0,
+      "start": 208.051,
+      "end": 210.605,
       "chord": "C"
     },
     {
-      "start": 216.0,
-      "end": 218.6,
+      "start": 210.605,
+      "end": 213.275,
       "chord": "F"
     },
     {
-      "start": 218.6,
-      "end": 221.2,
+      "start": 213.275,
+      "end": 215.876,
       "chord": "A#"
     },
     {
-      "start": 221.2,
-      "end": 223.8,
+      "start": 215.876,
+      "end": 218.453,
       "chord": "Gm"
     },
     {
-      "start": 223.8,
-      "end": 226.4,
+      "start": 218.453,
+      "end": 221.054,
       "chord": "A"
     },
     {
-      "start": 226.4,
-      "end": 229.0,
+      "start": 221.054,
+      "end": 223.701,
       "chord": "Dm"
     },
     {
-      "start": 230.0,
-      "end": 232.6,
+      "start": 223.701,
+      "end": 226.255,
       "chord": "Gm"
     },
     {
-      "start": 232.6,
-      "end": 235.2,
+      "start": 226.255,
+      "end": 228.902,
       "chord": "A"
     },
     {
-      "start": 235.2,
-      "end": 237.8,
+      "start": 228.902,
+      "end": 231.503,
       "chord": "Dm"
     },
     {
-      "start": 237.8,
-      "end": 240.4,
+      "start": 231.503,
+      "end": 234.104,
       "chord": "A#"
     },
     {
-      "start": 240.4,
-      "end": 243.0,
+      "start": 234.104,
+      "end": 236.704,
       "chord": "Gm"
     },
     {
-      "start": 243.0,
-      "end": 245.6,
+      "start": 236.704,
+      "end": 239.328,
       "chord": "A"
     },
     {
-      "start": 245.6,
-      "end": 248.2,
+      "start": 239.328,
+      "end": 241.905,
       "chord": "Dm"
     },
     {
-      "start": 248.2,
-      "end": 250.8,
+      "start": 241.905,
+      "end": 244.715,
       "chord": "A#"
     },
     {
-      "start": 250.8,
-      "end": 253.4,
+      "start": 244.715,
+      "end": 247.455,
       "chord": "Gm"
     },
     {
-      "start": 253.4,
-      "end": 256.0,
+      "start": 247.455,
+      "end": 250.032,
       "chord": "A"
     },
     {
-      "start": 256.0,
-      "end": 258.6,
+      "start": 250.032,
+      "end": 252.61,
       "chord": "Dm"
     },
     {
-      "start": 258.6,
-      "end": 261.2,
+      "start": 252.61,
+      "end": 255.257,
       "chord": "A#"
     },
     {
-      "start": 261.2,
-      "end": 263.8,
+      "start": 255.257,
+      "end": 257.695,
       "chord": "Gm"
     },
     {
-      "start": 263.8,
-      "end": 266.4,
+      "start": 257.695,
+      "end": 260.18,
       "chord": "A"
     },
     {
-      "start": 266.4,
-      "end": 269.0,
+      "start": 260.18,
+      "end": 262.803,
       "chord": "Dm"
     },
     {
-      "start": 269.0,
-      "end": 271.6,
+      "start": 262.803,
+      "end": 265.381,
       "chord": "A#"
     },
     {
-      "start": 271.6,
-      "end": 274.2,
+      "start": 265.381,
+      "end": 268.028,
       "chord": "Gm"
     },
     {
-      "start": 274.2,
-      "end": 276.8,
+      "start": 268.028,
+      "end": 270.652,
       "chord": "A"
     },
     {
-      "start": 276.8,
-      "end": 279.4,
+      "start": 270.652,
+      "end": 273.206,
       "chord": "Dm"
     },
     {
-      "start": 280.0,
-      "end": 282.6,
+      "start": 273.206,
+      "end": 275.83,
       "chord": "Gm"
     },
     {
-      "start": 282.6,
-      "end": 285.2,
+      "start": 275.83,
+      "end": 278.454,
       "chord": "C"
     },
     {
-      "start": 285.2,
-      "end": 287.8,
+      "start": 278.454,
+      "end": 281.078,
       "chord": "F"
     },
     {
-      "start": 287.8,
-      "end": 290.4,
+      "start": 281.078,
+      "end": 283.655,
       "chord": "A#"
     },
     {
-      "start": 290.4,
-      "end": 293.0,
+      "start": 283.655,
+      "end": 286.209,
       "chord": "Gm"
     },
     {
-      "start": 293.0,
-      "end": 295.6,
+      "start": 286.209,
+      "end": 288.879,
       "chord": "A"
     },
     {
-      "start": 295.6,
-      "end": 298.2,
+      "start": 288.879,
+      "end": 291.434,
       "chord": "Dm"
     },
     {
-      "start": 298.2,
-      "end": 300.8,
+      "start": 291.434,
+      "end": 294.081,
       "chord": "Dm"
     },
     {
-      "start": 300.8,
-      "end": 303.4,
+      "start": 294.081,
+      "end": 296.681,
       "chord": "Gm"
     },
     {
-      "start": 303.4,
-      "end": 306.0,
+      "start": 296.681,
+      "end": 299.305,
       "chord": "C"
     },
     {
-      "start": 306.0,
-      "end": 308.6,
+      "start": 299.305,
+      "end": 301.932,
       "chord": "F"
     }
   ]
