@@ -22,6 +22,8 @@ All experiments follow the structured framework: **Hypothesis → Implementation
 | **011** | Root Emphasis Grid Search | Root vs Fifth Emphasis | Optimal $w_5=0.50$, Peak CSR 69.6% (+40.0pp) | [011_root_emphasis.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/011_root_emphasis.md) |
 | **012** | Distance Metrics Ablation | Cosine vs Pearson vs L2 vs L1 | Confirmed Cosine (69.6%) > L2 (64.0%) > Pearson (61.5%) | [012_distance_metrics_ablation.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/012_distance_metrics_ablation.md) |
 | **013** | Ground Truth Audit | Annotation Rigor Verification | Identified 7-9s phase shift in Pop ground truth draft files | [013_ground_truth_audit.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/013_ground_truth_audit.md) |
+| **014** | Temporal Aggregation & Boundary Detection | Config A vs B vs C | Proved temporal segmentation alone is not the dominant bottleneck (Oracle 29.4% vs Base 29.9%) | [014_temporal_aggregation.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/014_temporal_aggregation.md) |
+| **015** | Bass / Root Evidence Prior | Root-vs-Fifth Confusion | Implemented benchmark script; awaiting local run results | [015_bass_root_evidence.md](file:///c:/Users/MY%20PC/Documents/Chord%20AI/docs/experiments/015_bass_root_evidence.md) |
 
 ---
 

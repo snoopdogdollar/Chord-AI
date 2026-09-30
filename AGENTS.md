@@ -4,7 +4,7 @@ Agents working in this repository must preserve the documented MVP scope.
 
 ## MVP Rules
 
-- Do not introduce deep learning.
+- Can introduce deep learning.
 - Do not add manual editing, transposition, MusicXML, MIDI, realtime processing, authentication, cloud sync, or collaboration.
 - Keep API routes thin. Business logic belongs in services.
 - Keep DSP, chord detection, sheet generation, and export generation separate.
