@@ -34,6 +34,8 @@ class NotebookContractTests(unittest.TestCase):
             if source.startswith('MODULE_SOURCE = '):
                 embedded = ast.literal_eval(ast.parse(source).body[0].value)
                 self.assertEqual(embedded, (HERE / 'chord_cnn.py').read_text(encoding='utf-8'))
+                smoothing = ast.literal_eval(ast.parse(source).body[1].value)
+                self.assertEqual(smoothing, (HERE / 'cnn_smoothing.py').read_text(encoding='utf-8'))
                 return
         self.fail('Missing inference module')
 

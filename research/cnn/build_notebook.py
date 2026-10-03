@@ -100,7 +100,9 @@ Cell này ghi `chord_cnn.py` vào output. Khi tải về máy, dùng chính file
 đảm bảo cùng kiến trúc CNN, CQT và cách chuẩn hóa. Không cần biến CQT thành PNG:
 CNN nhận trực tiếp ma trận số, không có trục/chữ/màu của biểu đồ.''')
 module_source = (HERE / 'chord_cnn.py').read_text(encoding='utf-8')
-code('MODULE_SOURCE = ' + repr(module_source) + '''
+code('MODULE_SOURCE = ' + repr(module_source) + '\nSMOOTHING_SOURCE = ' + repr((HERE / 'cnn_smoothing.py').read_text(encoding='utf-8')) + '''
+(BUNDLE / 'cnn_smoothing.py').write_text(SMOOTHING_SOURCE, encoding='utf-8')
+sys.path.insert(0, str(BUNDLE))
 (BUNDLE / 'chord_cnn.py').write_text(MODULE_SOURCE, encoding='utf-8')
 import importlib.util
 spec = importlib.util.spec_from_file_location('chord_cnn', BUNDLE / 'chord_cnn.py')
@@ -444,7 +446,7 @@ display(pd.DataFrame(segments).head(20))
 (BUNDLE / 'README.txt').write_text(
     'GuitarSet CNN baseline; not validated for full mixed songs.\\n'
     '24 maj/min classes, no N/silence detection. Unsupported references excluded from metrics.\\n'
-    'Keep best.pth and chord_cnn.py together. See config.json, labels.json, versions.json.\\n'
+    'Keep best.pth, chord_cnn.py and cnn_smoothing.py together. See config.json, labels.json, versions.json.\\n'
     'Install a suitable CPU PyTorch wheel and requirements-inference.txt in a separate environment.\\n'
     'Python usage:\\nfrom chord_cnn import predict_audio\\n'
     "segments = predict_audio('song.wav', 'best.pth', device='cpu')\\n"

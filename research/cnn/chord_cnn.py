@@ -4,6 +4,7 @@ import numpy as np
 import librosa
 import torch
 from torch import nn
+from cnn_smoothing import decode_segments, smooth_probabilities
 
 ROOTS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 LABELS = [root + ':' + quality for quality in ('maj', 'min') for root in ROOTS]
@@ -82,7 +83,8 @@ def load_model(checkpoint_path, device='cpu'):
 
 
 @torch.inference_mode()
-def predict_audio(audio_path, checkpoint_path, device='cpu', batch_size=128):
+def predict_probabilities(audio_path, checkpoint_path, device='cpu', batch_size=128):
+    """Run CNN once and retain all class probabilities at each window center."""
     model, checkpoint = load_model(checkpoint_path, device)
     config = checkpoint['config']
     features, duration = extract_cqt(audio_path, config)
@@ -93,15 +95,17 @@ def predict_audio(audio_path, checkpoint_path, device='cpu', batch_size=128):
         batch = np.stack([patch_at(features, i, config['window_frames']) for i in centers[offset:offset+batch_size]])
         outputs.extend(model(torch.from_numpy(batch[:, None]).to(device)).softmax(1).cpu().numpy())
     outputs = np.asarray(outputs)
-    predictions = outputs.argmax(1)
     times = np.asarray(centers) * step
-    edges = np.r_[0.0, (times[:-1] + times[1:]) / 2, duration]
-    segments = []
-    for i, label_id in enumerate(predictions):
-        label = checkpoint['labels'][int(label_id)]
-        if segments and segments[-1]['chord'] == label:
-            segments[-1]['end'] = float(edges[i+1])
-        else:
-            segments.append(dict(start=float(edges[i]), end=float(edges[i+1]), chord=label))
-    # No silence/unknown rejection or production smoothing in this baseline.
-    return segments
+    return times, outputs, duration, checkpoint['labels']
+
+
+def predict_audio(audio_path, checkpoint_path, device='cpu', batch_size=128, smoothing_seconds=0.0):
+    """Return segments; raw output stays the default for existing benchmarks.
+
+    Pass smoothing_seconds=0.4 for a centered probability mean. No N/silence
+    rejection is added. Short but real chords can still be affected.
+    """
+    times, probabilities, duration, labels = predict_probabilities(
+        audio_path, checkpoint_path, device=device, batch_size=batch_size)
+    probabilities = smooth_probabilities(times, probabilities, smoothing_seconds)
+    return decode_segments(times, probabilities, duration, labels)

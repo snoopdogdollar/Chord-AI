@@ -71,9 +71,39 @@ Checkpoint chứa `model_state_dict` và metadata, không phải state_dict tr�
 Kiến trúc và preprocessing được đóng gói cùng weights. Chưa lưu optimizer để
 resume training. Suy luận/CQT trên CPU vẫn có chi phí, nhưng không có backprop.
 
-## File và kiểm tra
+## So sánh timeline thô và làm mượt (không train lại)
+
+Chạy từ thư mục gốc project, thay đường dẫn audio theo bài bạn muốn thử:
+
+```powershell
+.\research\cnn\run_smoothing_check.ps1 -Audio "D:\Music\bai_hat.mp3"
+```
+
+Lệnh dùng hai luồng CPU và cửa sổ làm mượt mặc định 0,4 giây. Output vào thư mục
+có timestamp trong `D:\chord-cnn-results`, không ghi đè kết quả cũ. Có thể chỉ định
+`-Seconds 0.4 -Output "D:\chord-cnn-results\my_comparison"` (thư mục mới).
+
+- `raw.json`: timeline từ xác suất CNN gốc.
+- `smoothed.json`: trung bình xác suất theo thời gian rồi mới argmax và gộp nhãn.
+- `probabilities.npz`: thời điểm, xác suất gốc/làm mượt và thứ tự 24 lớp để kiểm tra lại.
+- `focus_probabilities.csv`: xác suất và nhãn ở khoảng 33–39 giây.
+- `comparison.json`: tham số, hash checkpoint, số đoạn ngắn và timeline vùng kiểm tra.
+
+Chỉ chạy CNN một lần cho cả hai kết quả. Làm mượt dùng các tâm cửa sổ trong
+khoảng ±0,2 giây; với stride hiện tại thường có 3 tâm, không phải 0,4 giây audio
+mới. Ở hai đầu bài chỉ lấy các tâm có sẵn. Không xóa theo độ dài hợp âm tối thiểu
+và không có quy tắc ép Am. Các chuyển hợp âm thật vẫn có thể bị dịch hoặc mất;
+ít lần đổi nhãn hơn chưa chứng minh độ chính xác cao hơn.
+
+API cũ `predict_audio(...)` mặc định vẫn cho timeline thô để giữ benchmark nhất
+quán. Dùng `predict_audio(..., smoothing_seconds=0.4)` để bật làm mượt.
+`cnn_smoothing.py` được đóng gói kèm model code trong các notebook/bundle mới;
+checkpoint `.pth` hiện có vẫn dùng được. Không cần train lại hoặc thay weights.
+
+## File phát triển
 
 - `chord_cnn.py`: kiến trúc + CQT + inference, được nhúng nguyên bản vào notebook.
+- `cnn_smoothing.py`: trung bình xác suất theo thời gian và giải mã timeline.
 - `build_notebook.py`: tạo lại notebook bằng Python chuẩn, không tải/train.
 - `test_notebook_contract.py`: kiểm tra syntax, nhãn và nhóm bằng stdlib.
 - `prepare_guitarset.py`: script local cũ, không cần chạy cho Kaggle.
