@@ -8,6 +8,8 @@ from app.core.errors import InvalidAnalysisRangeError, SongNotFoundError
 from app.repositories import AnalysisRepository, JobRepository, SongRepository
 from app.services.storage import store_upload
 from app.services.youtube import validate_youtube_url
+from app.services.sheet_document import resolve_score
+from app.sheets.notation import preview_pages
 
 
 MIN_ANALYSIS_RANGE_SECONDS = 1.0
@@ -107,8 +109,11 @@ class SongService:
         if not song:
             raise SongNotFoundError("Song was not found")
         sheet = self.analysis.latest_sheet(song_id)
-        content = sheet.content if sheet else ""
+        score = resolve_score(song, sheet, self.analysis)
         return {
             "song_id": song_id,
-            "sections": [{"name": "Song", "content": content.splitlines()}],
+            "title": score["title"],
+            "sections": [{"name": "Song", "content": score["text"].splitlines()}],
+            "pages": preview_pages(score) if sheet else [],
+            "notice": score["notice"],
         }

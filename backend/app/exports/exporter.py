@@ -9,28 +9,20 @@ def export_txt(content: str, target_path: Path) -> Path:
     return target_path
 
 
-def export_pdf(title: str, content: str, target_path: Path) -> Path:
+def export_pdf(score: dict, target_path: Path) -> Path:
     target_path.parent.mkdir(parents=True, exist_ok=True)
     try:
-        from reportlab.lib.pagesizes import letter
+        from reportlab.graphics import renderPDF
         from reportlab.pdfgen import canvas
+        from app.sheets.notation import score_pages
     except ImportError as exc:
         raise ExportFailedError("reportlab is required for PDF export") from exc
 
-    pdf = canvas.Canvas(str(target_path), pagesize=letter)
-    width, height = letter
-    y = height - 54
-    pdf.setTitle(title)
-    pdf.setFont("Helvetica-Bold", 16)
-    pdf.drawString(54, y, title)
-    y -= 30
-    pdf.setFont("Courier", 10)
-    for line in content.splitlines():
-        if y < 54:
-            pdf.showPage()
-            y = height - 54
-            pdf.setFont("Courier", 10)
-        pdf.drawString(54, y, line[:100])
-        y -= 14
+    pages = score_pages(score)
+    pdf = canvas.Canvas(str(target_path), pagesize=(pages[0].width, pages[0].height))
+    pdf.setTitle(score["title"])
+    for page in pages:
+        renderPDF.draw(page, pdf, 0, 0)
+        pdf.showPage()
     pdf.save()
     return target_path

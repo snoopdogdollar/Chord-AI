@@ -20,10 +20,42 @@ No chord-specific overrides, duration deletion or model retraining.
 | Transition into F:maj | 36.397 s | 36.397 s |
 | A:maj at 33.843–33.959 s | Present | Still present |
 
-78 window-center predictions changed. Fewer switches is a stability measurement,
-not a measured improvement in overall chord accuracy. The user identified Am
-in the focus region; no independent full-track annotations/listening check were
-performed. The short wrong A:maj at the beginning of Am remains.
+78 window-center predictions changed. Fewer switches is a stability measurement;
+accuracy is measured separately against the reference below. The short A:maj
+at 33.843–33.959 s remains wrong (the supplied reference labels this time G).
+
+## Evaluation against the user-designated benchmark
+
+Reference: `backend/benchmarks/annotations/rock_backing_c_major.json`, explicitly
+identified by the user as ground truth for this audio. Its 95 intervals cover
+10.00–238.95 s, totaling 228.95 s. The intro and unannotated tail are excluded.
+No timestamp shift or boundary tolerance was applied. Labels are normalized
+consistently, e.g. `Am` = `A:min` and `C` = `C:maj`.
+
+Accuracy here means seconds with the correct root AND major/minor quality,
+divided by annotated seconds. It is not segment-count accuracy or the Kaggle
+test-set accuracy.
+
+| Evaluated region | Raw | Smoothed |
+|---|---:|---:|
+| All annotated time (228.95 s) | 56.70% | 57.96% |
+| Correct duration | 129.83 s | 132.70 s |
+| Focus region, 33–39 s | 82.75% | 86.62% |
+
+Overall improvement: **1.25 percentage points**, or **2.87 additional correctly
+labeled seconds**. This is a modest improvement on one song; it does not prove
+improvement on unseen songs. This track has already informed smoothing work,
+so it is a development benchmark rather than an untouched final test.
+
+The reference places Am at 34.10–36.51 s. Smoothed Am spans 33.959–36.397 s:
+the internal A:maj interruption is removed, but transition timing still differs.
+
+Machine-readable results: `research/cnn/data/rock_smoothing_benchmark.json`.
+Reproduce with the standard-library-only scorer (no inference or training):
+
+```powershell
+python research/cnn/score_smoothing.py --reference backend/benchmarks/annotations/rock_backing_c_major.json --comparison-dir 'D:\chord-cnn-results\rock_smoothing_20261004' --output research/cnn/data/rock_smoothing_benchmark.json
+```
 
 ## Validation
 

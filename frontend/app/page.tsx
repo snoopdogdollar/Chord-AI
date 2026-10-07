@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { WaveformRangePicker } from "@/components/WaveformRangePicker";
+import { ScorePreview } from "@/components/ScorePreview";
 import { useChordAiWorkflow } from "@/features/useChordAiWorkflow";
 import type { AnalysisRange } from "@/services/api";
 
@@ -10,7 +11,6 @@ export default function Home() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [analysisRange, setAnalysisRange] = useState<AnalysisRange | null>(null);
   const { busy, error, exportSheet, job, refreshJob, sheet, submitFile, submitUrl } = useChordAiWorkflow();
-  const sheetText = sheet?.sections.flatMap((section) => section.content).join("\n") ?? "";
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -117,27 +117,20 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="rounded border border-staff bg-white p-4">
+          <div className="min-w-0 rounded border border-staff bg-white p-4">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-lg font-semibold text-ink">Chord Sheet</h2>
               <div className="flex gap-2">
                 <button
-                  className="rounded border border-staff px-3 py-2 text-sm font-semibold"
-                  disabled={job?.status !== "completed"}
-                  onClick={() => void exportSheet("txt")}
-                >
-                  TXT
-                </button>
-                <button
-                  className="rounded border border-staff px-3 py-2 text-sm font-semibold"
-                  disabled={job?.status !== "completed"}
+                  className="rounded bg-accent px-3 py-2 text-sm font-semibold text-white"
+                  disabled={job?.status !== "completed" || !sheet?.pages?.length}
                   onClick={() => void exportSheet("pdf")}
                 >
-                  PDF
+                  Download PDF
                 </button>
               </div>
             </div>
-            <pre className="min-h-[440px] overflow-auto rounded bg-paper p-4 font-mono text-sm leading-6 text-ink">{sheetText}</pre>
+            <ScorePreview sheet={sheet} />
           </div>
         </section>
       </div>

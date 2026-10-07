@@ -30,7 +30,7 @@ export const useChordAiWorkflow = create<WorkflowState>((set, get) => ({
   error: null,
   busy: false,
   async submitFile(file, range) {
-    set({ busy: true, error: null, sheet: null });
+    set({ busy: true, error: null, sheet: null, job: null });
     try {
       const submitted = await uploadAudio(file, range);
       set({
@@ -48,7 +48,7 @@ export const useChordAiWorkflow = create<WorkflowState>((set, get) => ({
     }
   },
   async submitUrl(url) {
-    set({ busy: true, error: null, sheet: null });
+    set({ busy: true, error: null, sheet: null, job: null });
     try {
       const submitted = await submitYouTube(url);
       set({
@@ -67,20 +67,23 @@ export const useChordAiWorkflow = create<WorkflowState>((set, get) => ({
   },
   async refreshJob() {
     const current = get().job;
-    if (!current || current.status === "completed" || current.status === "failed") {
+    if (!current || current.status === "failed" || (current.status === "completed" && get().sheet)) {
       return;
     }
     try {
-      const job = await getJob(current.job_id);
+      const job = current.status === "completed" ? current : await getJob(current.job_id);
+      if (get().job?.job_id !== current.job_id) return;
       set({ job });
       if (job.status === "completed") {
         const sheet = await getSheet(job.song_id);
-        set({ sheet });
+        if (get().job?.job_id !== current.job_id) return;
+        set({ sheet, error: null });
       }
       if (job.status === "failed") {
         set({ error: job.error_message ?? "Processing failed" });
       }
     } catch (error) {
+      if (get().job?.job_id !== current.job_id) return;
       set({ error: error instanceof Error ? error.message : "Could not refresh job" });
     }
   },

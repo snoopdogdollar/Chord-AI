@@ -14,6 +14,7 @@ from app.db.models import ProcessingStage
 from app.repositories import AnalysisRepository, JobRepository, SongRepository
 from app.services.youtube import download_youtube_audio
 from app.sheets.generator import generate_sheet_text
+from app.sheets.score import build_score, encode_score
 
 
 class PipelineRunner:
@@ -69,7 +70,8 @@ class PipelineRunner:
             chord_events = ChordDetector().detect(features, beats)
 
             self.jobs.mark_processing(job, stage=ProcessingStage.sheet_generation.value, progress=85)
-            content = generate_sheet_text(song.title, chord_events)
+            content = encode_score(build_score(song.title, chord_events, duration=features.duration,
+                                               bpm=beats.bpm, beats=beats.beats))
 
             self.songs.update_analysis(
                 song,

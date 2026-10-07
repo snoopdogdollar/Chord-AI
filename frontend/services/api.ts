@@ -25,6 +25,9 @@ export type JobStatus = {
 
 export type SheetResponse = {
   song_id: string;
+  title: string;
+  pages: string[];
+  notice: string;
   sections: Array<{ name: string; content: string[] }>;
 };
 

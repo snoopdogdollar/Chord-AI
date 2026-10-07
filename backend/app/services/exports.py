@@ -6,6 +6,7 @@ from app.core.config import Settings
 from app.core.errors import ExportFailedError, ExportNotFoundError, SongNotFoundError
 from app.exports.exporter import export_pdf, export_txt
 from app.repositories import AnalysisRepository, SongRepository
+from app.services.sheet_document import resolve_score
 
 
 class ExportService:
@@ -26,10 +27,11 @@ class ExportService:
             raise ExportFailedError("No generated sheet is available")
 
         target = self.settings.exports_dir / f"{song_id}.{export_format}"
+        score = resolve_score(song, sheet, self.analysis)
         if export_format == "txt":
-            export_txt(sheet.content, target)
+            export_txt(score["text"], target)
         else:
-            export_pdf(song.title, sheet.content, target)
+            export_pdf(score, target)
 
         export = self.analysis.create_export(song_id, export_format, str(target))
         return {"export_id": export.id, "download_url": f"/api/v1/exports/{export.id}"}

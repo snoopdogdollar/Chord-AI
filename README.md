@@ -11,6 +11,11 @@ The MVP intentionally stays small:
 - TXT and PDF exports only
 - simple desktop web UI
 
+The result is a staff-based chord accompaniment sheet with estimated 4/4 bars, beat slashes,
+and chord symbols. Preview the pages in the app and download a vector PDF. Meter/downbeats are
+estimated; melody and lyrics are not transcribed. See [Staff sheet v1](docs/staff-sheet-v1.md)
+for timing assumptions and compatibility with earlier analyses.
+
 No deep learning, realtime processing, manual chord editing, transposition, MusicXML, MIDI, or automatic song-section recognition are included in the MVP.
 
 ## Project Structure
